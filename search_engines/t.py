@@ -3,6 +3,7 @@ from ast import literal_eval
 import time
 import argparse
 import os
+import traceback
 # import arg
 # def mysearch(csvaddr='0x5b27531228d8c65a0d2adcd8903fd3348f768a11'):
 # def mysearch(csvaddr='0xb01fce059d66971fdc1e584a5cbf0116068c9048'):
@@ -52,10 +53,10 @@ def mysearch(csvaddr='0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'):
             # results = engine.search(addr)
             # engine.output('html',filename)
     # print(links)
-def winsearch():
+def winsearch(csvaddr='0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'):
     with open('addr.txt','r') as f:
         addrlist = literal_eval(f.read())
-        csvaddr = '0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'
+        # csvaddr = '0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'
         count = 0
         myindex = addrlist.index(csvaddr)
         addrlist = addrlist[myindex:]
@@ -76,8 +77,12 @@ def winsearch():
             count += 1
             if count >= 50:
                 quit()
+            traceback.print_exc()
             mysearch(rebootaddr)
+
             # os.execv('/root/.miniconda3/envs/twvenv/bin/python', ['python', 't.py', '-q', rebootaddr])
+#0x3bf351a62df57dce8512b136daa4cd6ebe2dda91
+#0xd67e205a5b7a5d82b86afbc59f67f74a878d1e68
 if __name__ == '__main__':
     # mysearch()
     # main()
