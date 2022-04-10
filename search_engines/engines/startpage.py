@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
 
-from ..engine import SearchEngine
-from ..config import PROXY, TIMEOUT, FAKE_USER_AGENT
-from .. import output as out
-
+from search_engines.engine import SearchEngine
+from search_engines.config import PROXY, TIMEOUT, FAKE_USER_AGENT
+from search_engines import output as out
 
 class Startpage(SearchEngine):
     '''Searches startpage.com'''
@@ -67,5 +66,8 @@ class Startpage(SearchEngine):
         if response.http == 200 and not is_blocked:
             return True
         msg = 'Banned' if is_blocked else ('HTTP ' + str(response.http)) if response.http else response.html
+        if response.http == 429:#搜索单个页面没用到这个文件
+            raise Exception
+
         out.console(msg, level=out.Level.error)
         return False

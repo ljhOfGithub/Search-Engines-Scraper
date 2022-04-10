@@ -2,7 +2,10 @@ from search_engines import Google
 from ast import literal_eval
 import time
 # import arg
-def mysearch(csvaddr='0x5b27531228d8c65a0d2adcd8903fd3348f768a11'):
+# def mysearch(csvaddr='0x5b27531228d8c65a0d2adcd8903fd3348f768a11'):
+# def mysearch(csvaddr='0xb01fce059d66971fdc1e584a5cbf0116068c9048'):
+# def mysearch(csvaddr='0x81e4b65b9330c5693d38430111d7eb174615bdd6'):
+def mysearch(csvaddr='0x98831a269cb88b6bfcc86e45b32c158981b34b22'):
     with open('addr.txt','r') as f:
         addrlist = literal_eval(f.read())
     # addrlist = ['0x516980e3321482b51b0e10af2770d6fbd47f6f9f']
@@ -23,13 +26,16 @@ def mysearch(csvaddr='0x5b27531228d8c65a0d2adcd8903fd3348f768a11'):
             filename = 'mycsv/' + addr
             engine.output('csv',filename)
             links = results.links()
-            time.sleep(1)
+            time.sleep(0.5)
         except Exception:
+            print('reboot')
             time.sleep(5)
+            myindex = addrlist.index(addr) - 1#
+            rebootaddr = addrlist[myindex]
             count += 1
             if count >= 50 :
                 quit()
-            mysearch(addr)
+            mysearch(rebootaddr)
             # print(addr)
             # results = engine.search(addr)
             # engine.output('html',filename)

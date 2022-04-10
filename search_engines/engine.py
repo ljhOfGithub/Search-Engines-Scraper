@@ -90,7 +90,7 @@ class SearchEngine(object):
         results = [self._item(l) for l in tags]
         import pdb
         # pdb.set_trace()
-        filteredHost = ['etherscan.com','bloxy.info','twitter.com']
+        filteredHost = ['etherscan.io','bloxy.info','twitter.com','etherscan.com']
         if u'url' in self._filters:
             results = [l for l in results if self._query_in(l['link'])]
         if u'title' in self._filters:
@@ -123,7 +123,9 @@ class SearchEngine(object):
         if response.http == 200:
             return True
         msg = ('HTTP ' + str(response.http)) if response.http else response.html
-        out.console(msg, level=out.Level.error)
+        out.console(msg, level=out.Level.error)#可能会出错429
+        if response.http == 429:
+            raise Exception
         return False
     
     def set_headers(self, headers):
