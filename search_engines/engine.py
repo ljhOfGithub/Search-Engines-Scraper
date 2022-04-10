@@ -3,11 +3,11 @@ from time import sleep
 from random import uniform as random_uniform
 from collections import namedtuple
 
-from .results import SearchResults
-from .http_client import HttpClient
-from . import utils
-from . import output as out
-from . import config as cfg
+from results import SearchResults
+from http_client import HttpClient
+import utils
+import output as out
+import config as cfg
 
 
 class SearchEngine(object):
@@ -88,7 +88,9 @@ class SearchEngine(object):
         '''Processes and filters the search results.''' 
         tags = soup.select(self._selectors('links'))
         results = [self._item(l) for l in tags]
-
+        import pdb
+        # pdb.set_trace()
+        filteredHost = ['etherscan.com','bloxy.info','twitter.com']
         if u'url' in self._filters:
             results = [l for l in results if self._query_in(l['link'])]
         if u'title' in self._filters:
@@ -96,9 +98,11 @@ class SearchEngine(object):
         if u'text' in self._filters:
             results = [l for l in results if self._query_in(l['text'])]
         if u'host' in self._filters:
-            results = [l for l in results if self._query_in(utils.domain(l['link']))]
+            # results = [l for l in results if self._query_in(utils.domain(l['link']))]#如果搜索结果不在domain中则过滤掉该搜索结果
+            results = [l for l in results if utils.domain(l['link']) not in filteredHost]
         return results
-    
+        #result = {'host': 'github.com', 'link': 'https://github.com/twintproject/twint/issues/1391', 'title': '[REQUEST]TypeError: Cannot serialize non-str key None #1391https://github.com › twintproject › twint › issues',
+        # 'text': "Running this in Anaconda? Jupyter Notebook? Terminal? Ubuntu 20.04 in terminal. I'm searching for '0x516980e3321482b51b0e10af2770d6fbd47f6f9f'."}
     def _collect_results(self, items):
         '''Colects the search results items.''' 
         for item in items:
@@ -129,21 +133,23 @@ class SearchEngine(object):
         '''
         self._http_client.session.headers.update(headers)
     
-    def set_search_operator(self, operator):
+    def set_search_operator(self, operator):#提取支持的过滤格式
         '''Filters search results based on the operator. 
         Supported operators: 'url', 'title', 'text', 'host'
 
         :param operator: str The search operator(s)
         '''
-        operators = utils.decode_bytes(operator or u'').lower().split(u',')
+        operators = utils.decode_bytes(operator or u'').lower().split(u',')#支持多种格式的过滤，operators是被过滤的结果
+        import pdb
+        # pdb.set_trace()
         supported_operators = [u'url', u'title', u'text', u'host']
 
         for operator in operators:
-            if operator not in supported_operators:
+            if operator not in supported_operators:#提示不支持的过滤格式
                 msg = u'Ignoring unsupported operator "{}"'.format(operator)
                 out.console(msg, level=out.Level.warning)
             else:
-                self._filters += [operator]
+                self._filters += [operator]#
     
     def search(self, query, pages=cfg.SEARCH_ENGINE_RESULTS_PAGES): 
         '''Queries the search engine, goes through the pages and collects the results.
