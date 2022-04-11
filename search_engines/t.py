@@ -53,13 +53,16 @@ def mysearch(csvaddr='0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'):
             # results = engine.search(addr)
             # engine.output('html',filename)
     # print(links)
+# def winsearch(csvaddr='0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'):
+# def winsearch(csvaddr='0x150f70875c0229daa9c46e461498f81ab9a76a81'):
+# def winsearch(csvaddr='0x3047c9d8ba82571f147a8603909c6cc42fc7cd6e'):
 def winsearch(csvaddr='0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'):
     with open('addr.txt','r') as f:
         addrlist = literal_eval(f.read())
         # csvaddr = '0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'
         count = 0
         myindex = addrlist.index(csvaddr)
-        addrlist = addrlist[myindex:]
+        addrlist = addrlist[myindex:myindex + 1]
         engine = Google()
     for addr in addrlist:
         try:
@@ -78,7 +81,7 @@ def winsearch(csvaddr='0x3bf351a62df57dce8512b136daa4cd6ebe2dda91'):
             if count >= 50:
                 quit()
             traceback.print_exc()
-            mysearch(rebootaddr)
+            winsearch(rebootaddr)
 
             # os.execv('/root/.miniconda3/envs/twvenv/bin/python', ['python', 't.py', '-q', rebootaddr])
 #0x3bf351a62df57dce8512b136daa4cd6ebe2dda91
